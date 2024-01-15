@@ -4,8 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-
-	"github.com/Glazapolzet/go_pokedex/internal/api"
 )
 
 type locationArea struct {
@@ -25,7 +23,8 @@ type locationAreaList struct {
 }
 
 func getLocationAreaList(url string) *locationAreaList {
-	data := api.Get(url)
+	data := get(url)
+
 	locationAreaList := locationAreaList{}
 
 	err := json.Unmarshal(data, &locationAreaList)

@@ -15,7 +15,6 @@ func Get(url string) []byte {
 	defer res.Body.Close()
 
 	body, err := io.ReadAll(res.Body)
-
 	if err != nil {
 		log.Fatal(err)
 	}

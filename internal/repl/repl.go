@@ -17,9 +17,9 @@ func Run() {
 		prompt := getUserPrompt()
 
 		command, ok := commandList[prompt]
-
 		if !ok {
 			fmt.Printf("\nNo such command ;(\n\n")
+
 			continue
 		}
 
