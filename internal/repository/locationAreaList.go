@@ -10,10 +10,6 @@ type locationAreaBrief struct {
 	URL  string `json:"url"`
 }
 
-func (l locationAreaBrief) String() string {
-	return l.Name
-}
-
 type locationAreaList struct {
 	Count    int                 `json:"count"`
 	Next     *string             `json:"next"`
