@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/Glazapolzet/go_pokedex/internal/commands"
 )
@@ -14,22 +15,32 @@ func Run() {
 	for {
 		fmt.Print("Pokedex > ")
 
-		prompt := getUserPrompt()
+		tokens := makeTokens(getUserPrompt())
 
-		command, ok := commandList[prompt]
+		command, ok := commands.GetCommand(commandList, tokens[0])
+
 		if !ok {
-			fmt.Printf("\nNo such command ;(\n\n")
+			continue
+		}
+
+		if len(tokens) == 1 {
+			command.Callback()
 
 			continue
 		}
 
-		command.Callback()
+		command.Callback(tokens[1:]...)
 	}
+}
+
+func makeTokens(prompt string) []string {
+	return strings.Split(prompt, " ")
 }
 
 func getUserPrompt() string {
 	scanner := bufio.NewScanner(os.Stdin)
 
 	scanner.Scan()
+
 	return scanner.Text()
 }

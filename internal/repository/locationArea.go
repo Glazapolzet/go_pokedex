@@ -2,79 +2,78 @@ package repository
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 )
 
 type locationArea struct {
-	Name string `json:"name"`
-	URL  string `json:"url"`
+	EncounterMethodRates []struct {
+		EncounterMethod struct {
+			Name string `json:"name"`
+			URL  string `json:"url"`
+		} `json:"encounter_method"`
+		VersionDetails []struct {
+			Rate    int `json:"rate"`
+			Version struct {
+				Name string `json:"name"`
+				URL  string `json:"url"`
+			} `json:"version"`
+		} `json:"version_details"`
+	} `json:"encounter_method_rates"`
+	GameIndex int `json:"game_index"`
+	ID        int `json:"id"`
+	Location  struct {
+		Name string `json:"name"`
+		URL  string `json:"url"`
+	} `json:"location"`
+	Name  string `json:"name"`
+	Names []struct {
+		Language struct {
+			Name string `json:"name"`
+			URL  string `json:"url"`
+		} `json:"language"`
+		Name string `json:"name"`
+	} `json:"names"`
+	PokemonEncounters []struct {
+		Pokemon struct {
+			Name string `json:"name"`
+			URL  string `json:"url"`
+		} `json:"pokemon"`
+		VersionDetails []struct {
+			EncounterDetails []struct {
+				Chance          int   `json:"chance"`
+				ConditionValues []any `json:"condition_values"`
+				MaxLevel        int   `json:"max_level"`
+				Method          struct {
+					Name string `json:"name"`
+					URL  string `json:"url"`
+				} `json:"method"`
+				MinLevel int `json:"min_level"`
+			} `json:"encounter_details"`
+			MaxChance int `json:"max_chance"`
+			Version   struct {
+				Name string `json:"name"`
+				URL  string `json:"url"`
+			} `json:"version"`
+		} `json:"version_details"`
+	} `json:"pokemon_encounters"`
 }
 
-func (l locationArea) String() string {
-	return l.Name
-}
-
-type locationAreaList struct {
-	Count    int            `json:"count"`
-	Next     *string        `json:"next"`
-	Previous *string        `json:"previous"`
-	Results  []locationArea `json:"results"`
-}
-
-func getLocationAreaList(url string) *locationAreaList {
-	data := get(url)
-
-	locationAreaList := locationAreaList{}
-
-	err := json.Unmarshal(data, &locationAreaList)
+func (l *locationArea) Unmarshal(data []byte) {
+	err := json.Unmarshal(data, l)
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	return &locationAreaList
 }
 
-func updateLocationAreaListUrls(current string, next *string, previous *string) error {
-	urls.LocationAreaListUrl = current
-	urls.NextLocationAreaListUrl = next
-	urls.PrevLocationAreaListUrl = previous
+func getLocationArea(url string) *locationArea {
+	data := get(url)
+	locationArea := &locationArea{}
 
-	return nil
+	unmarshal(locationArea, data)
+
+	return locationArea
 }
 
-func GetNextLocationAreaList() *locationAreaList {
-	locationAreaList := getLocationAreaList(urls.LocationAreaListUrl)
-
-	if locationAreaList.Next == nil {
-		fmt.Printf("\nNo more pages left..\n\n")
-
-		return nil
-	}
-
-	if urls.PrevLocationAreaListUrl == nil && urls.NextLocationAreaListUrl == nil {
-		updateLocationAreaListUrls(urls.LocationAreaListUrl, locationAreaList.Next, locationAreaList.Previous)
-
-		return locationAreaList
-	}
-
-	nextLocationAreaList := getLocationAreaList(*locationAreaList.Next)
-	updateLocationAreaListUrls(*locationAreaList.Next, nextLocationAreaList.Next, nextLocationAreaList.Previous)
-
-	return nextLocationAreaList
-}
-
-func GetPrevLocationAreaList() *locationAreaList {
-	locationAreaList := getLocationAreaList(urls.LocationAreaListUrl)
-
-	if locationAreaList.Previous == nil {
-		fmt.Printf("\nNo more pages left..\n\n")
-
-		return nil
-	}
-
-	prevLocationAreaList := getLocationAreaList(*locationAreaList.Previous)
-	updateLocationAreaListUrls(*locationAreaList.Previous, prevLocationAreaList.Next, prevLocationAreaList.Previous)
-
-	return prevLocationAreaList
+func GetLocationArea(name string) *locationArea {
+	return getLocationArea(urls.locationAreaListUrl + name)
 }

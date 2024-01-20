@@ -5,7 +5,7 @@ import (
 	"os"
 )
 
-func exit() error {
+func exit(args ...string) error {
 	fmt.Printf("\nBye-bye!\n\n")
 
 	os.Exit(0)

@@ -7,6 +7,11 @@ func Get() map[string]CliCommand {
 			Description: "Displays a help message.",
 			Callback:    nil,
 		},
+		"explore": {
+			Name:        "explore",
+			Description: "Displays pokemons in this area.",
+			Callback:    explore,
+		},
 		"exit": {
 			Name:        "exit",
 			Description: "Exit the Pokedex.",
@@ -26,6 +31,7 @@ func Get() map[string]CliCommand {
 
 	help := commandList["help"]
 	help.Callback = makeHelp(commandList)
+	commandList["help"] = help
 
 	return commandList
 }

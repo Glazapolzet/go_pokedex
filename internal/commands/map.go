@@ -6,11 +6,15 @@ import (
 	"github.com/Glazapolzet/go_pokedex/internal/repository"
 )
 
+func printEnd() {
+	fmt.Printf("\nNo more pages left..\n\n")
+}
+
 func printMap(results []fmt.Stringer) error {
 	var formatted string
 
-	for _, locationArea := range results {
-		formatted += fmt.Sprintf("%v\n", locationArea)
+	for _, element := range results {
+		formatted += fmt.Sprintf("%v\n", element)
 	}
 
 	fmt.Printf("\n%v\n", formatted)
@@ -18,10 +22,12 @@ func printMap(results []fmt.Stringer) error {
 	return nil
 }
 
-func mapf() error {
+func mapf(args ...string) error {
 	locationAreaList := repository.GetNextLocationAreaList()
 
 	if locationAreaList == nil {
+		printEnd()
+
 		return nil
 	}
 
@@ -38,10 +44,12 @@ func mapf() error {
 	return nil
 }
 
-func mapb() error {
+func mapb(args ...string) error {
 	locationAreaList := repository.GetPrevLocationAreaList()
 
 	if locationAreaList == nil {
+		printEnd()
+
 		return nil
 	}
 
