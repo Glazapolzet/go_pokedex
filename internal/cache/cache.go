@@ -36,21 +36,23 @@ func (c *Cache) Get(key string) ([]byte, bool) {
 	return entry.val, ok
 }
 
-func (c *Cache) reapLoop(interval time.Duration) {
+func (c *Cache) reap(t time.Time, interval time.Duration) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 
+	for key, entry := range c.entries {
+		if t.Sub(entry.createdAt).Seconds() > interval.Seconds() {
+			delete(c.entries, key)
+		}
+	}
+}
+
+func (c *Cache) reapLoop(interval time.Duration) {
 	ticker := time.NewTicker(interval)
 
-	go func() {
-		for t := range ticker.C {
-			for key, entry := range c.entries {
-				if t.Sub(entry.createdAt).Seconds() > interval.Seconds() {
-					delete(c.entries, key)
-				}
-			}
-		}
-	}()
+	for t := range ticker.C {
+		c.reap(t, interval)
+	}
 }
 
 func NewCache(interval time.Duration) *Cache {
@@ -59,7 +61,7 @@ func NewCache(interval time.Duration) *Cache {
 		entries: make(map[string]cacheEntry),
 	}
 
-	cache.reapLoop(interval)
+	go cache.reapLoop(interval)
 
 	return &cache
 }
