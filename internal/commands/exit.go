@@ -5,10 +5,18 @@ import (
 	"os"
 )
 
-func exit(args ...string) error {
-	fmt.Printf("\nBye-bye!\n\n")
+func makeExit() *cliCommand {
+	callback := func(args ...string) error {
+		fmt.Printf("\nBye-bye!\n\n")
 
-	os.Exit(0)
+		os.Exit(0)
 
-	return nil
+		return nil
+	}
+
+	return &cliCommand{
+		Name:        "exit",
+		Description: "Exit the Pokedex.",
+		Callback:    callback,
+	}
 }

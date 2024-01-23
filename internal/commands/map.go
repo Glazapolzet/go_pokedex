@@ -6,46 +6,58 @@ import (
 	"github.com/Glazapolzet/go_pokedex/internal/repository"
 )
 
-func printEnd() {
-	fmt.Printf("\nNo more pages left..\n\n")
-}
+func makeMapf(r repository.Repository) *cliCommand {
+	callback := func(args ...string) error {
+		locationAreaList := r.GetNextLocationAreaList()
 
-func mapf(args ...string) error {
-	locationAreaList := repository.GetNextLocationAreaList()
+		if locationAreaList == nil {
+			fmt.Printf("\nNo more pages left..\n\n")
 
-	if locationAreaList == nil {
-		printEnd()
+			return nil
+		}
 
-		return nil
-	}
+		var formatted string
 
-	var formatted string
+		for _, locationArea := range locationAreaList.Results {
+			formatted += fmt.Sprintf("%v\n", locationArea.Name)
+		}
 
-	for _, locationArea := range locationAreaList.Results {
-		formatted += fmt.Sprintf("%v\n", locationArea)
-	}
-
-	fmt.Printf("\n%v\n", formatted)
-
-	return nil
-}
-
-func mapb(args ...string) error {
-	locationAreaList := repository.GetPrevLocationAreaList()
-
-	if locationAreaList == nil {
-		printEnd()
+		fmt.Printf("\n%v\n", formatted)
 
 		return nil
 	}
 
-	var formatted string
+	return &cliCommand{
+		Name:        "map",
+		Description: "Displays the names of 20 location areas in the Pokemon world. Each subsequent call to map displays the next 20 locations.",
+		Callback:    callback,
+	}
+}
 
-	for _, locationArea := range locationAreaList.Results {
-		formatted += fmt.Sprintf("%v\n", locationArea)
+func makeMapb(r repository.Repository) *cliCommand {
+	callback := func(args ...string) error {
+		locationAreaList := r.GetPrevLocationAreaList()
+
+		if locationAreaList == nil {
+			fmt.Printf("\nNo more pages left..\n\n")
+
+			return nil
+		}
+
+		var formatted string
+
+		for _, locationArea := range locationAreaList.Results {
+			formatted += fmt.Sprintf("%v\n", locationArea.Name)
+		}
+
+		fmt.Printf("\n%v\n", formatted)
+
+		return nil
 	}
 
-	fmt.Printf("\n%v\n", formatted)
-
-	return nil
+	return &cliCommand{
+		Name:        "mapb",
+		Description: "Similar to the map command, however, instead of displaying the next 20 locations, it displays the previous 20 locations. It's a way to go back.",
+		Callback:    callback,
+	}
 }

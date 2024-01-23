@@ -1,11 +1,6 @@
 package repository
 
-import (
-	"encoding/json"
-	"log"
-)
-
-type locationArea struct {
+type LocationArea struct {
 	EncounterMethodRates []struct {
 		EncounterMethod struct {
 			Name string `json:"name"`
@@ -58,22 +53,6 @@ type locationArea struct {
 	} `json:"pokemon_encounters"`
 }
 
-func (l *locationArea) Unmarshal(data []byte) {
-	err := json.Unmarshal(data, l)
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-
-func getLocationArea(url string) *locationArea {
-	data := get(url)
-	locationArea := &locationArea{}
-
-	unmarshal(locationArea, data)
-
-	return locationArea
-}
-
-func GetLocationArea(name string) *locationArea {
-	return getLocationArea(urls.locationAreaListUrl + name)
+func NewLocationArea() *LocationArea {
+	return &LocationArea{}
 }

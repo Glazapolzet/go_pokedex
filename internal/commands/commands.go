@@ -1,25 +1,62 @@
 package commands
 
-import "fmt"
+import (
+	"fmt"
 
-type CliCommand struct {
+	"github.com/Glazapolzet/go_pokedex/internal/repository"
+)
+
+type cliCommand struct {
 	Name        string
 	Description string
 	Callback    func(args ...string) error
 }
 
-func printNoSuchCommand() {
-	fmt.Printf("\nNo such command\n\n")
-}
-
-func GetCommand(commandList map[string]CliCommand, key string) (*CliCommand, bool) {
-	command, ok := commandList[key]
-
-	if !ok {
-		printNoSuchCommand()
-
-		return nil, ok
+func NewCliCommands(repo repository.Repository) *CliCommands {
+	c := &CliCommands{
+		commandList: map[string]*cliCommand{},
+		repository:  repo,
 	}
 
-	return &command, ok
+	exit := makeExit()
+	c.SetCommand(exit.Name, exit)
+
+	explore := makeExplore(repo)
+	c.SetCommand(explore.Name, explore)
+
+	mapf := makeMapf(repo)
+	c.SetCommand(mapf.Name, mapf)
+
+	mapb := makeMapb(repo)
+	c.SetCommand(mapb.Name, mapb)
+
+	help := makeHelp(c.GetCommandList())
+	c.SetCommand(help.Name, help)
+
+	return c
+}
+
+type CliCommands struct {
+	commandList map[string]*cliCommand
+	repository  repository.Repository
+}
+
+func (c *CliCommands) GetCommandList() map[string]*cliCommand {
+	return c.commandList
+}
+
+func (c *CliCommands) GetCommand(key string) *cliCommand {
+	command, ok := c.commandList[key]
+
+	if !ok {
+		fmt.Printf("\nNo such command\n\n")
+
+		return nil
+	}
+
+	return command
+}
+
+func (c *CliCommands) SetCommand(key string, newCommand *cliCommand) {
+	c.commandList[key] = newCommand
 }

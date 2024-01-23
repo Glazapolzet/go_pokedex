@@ -5,27 +5,24 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/Glazapolzet/go_pokedex/internal/commands"
+	apiimplementation "github.com/Glazapolzet/go_pokedex/internal/repository/api_implementation"
 )
 
 func Run() {
-	commandList := commands.Get()
+	repository := apiimplementation.NewRepository(time.Minute * 5)
+	cliCommands := commands.NewCliCommands(repository)
 
 	for {
 		fmt.Print("Pokedex > ")
 
 		tokens := makeTokens(getUserPrompt())
 
-		command, ok := commands.GetCommand(commandList, tokens[0])
+		command := cliCommands.GetCommand(tokens[0])
 
-		if !ok {
-			continue
-		}
-
-		if len(tokens) == 1 {
-			command.Callback()
-
+		if command == nil {
 			continue
 		}
 
