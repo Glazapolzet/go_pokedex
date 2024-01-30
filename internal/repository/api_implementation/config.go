@@ -1,19 +1,31 @@
 package apiimplementation
 
-type pokeApiEndpoints struct {
-	baseUrl                        string
-	locationAreaListUrl            string
-	locationAreaListPaginationUrls *paginationUrls
-	pokemonUrl                     string
+type PaginationUrls struct {
+	Current  string
+	Next     *string
+	Previous *string
 }
 
-var urlConfig = &pokeApiEndpoints{
-	baseUrl:             "https://pokeapi.co/api/v2/",
-	locationAreaListUrl: "https://pokeapi.co/api/v2/location-area/",
-	locationAreaListPaginationUrls: &paginationUrls{
+func (p *PaginationUrls) Set(current string, next *string, prev *string) {
+	p.Current = current
+	p.Next = next
+	p.Previous = prev
+}
+
+type PokeApiUrls struct {
+	BaseUrl                        string
+	LocationAreaListUrl            string
+	LocationAreaListPaginationUrls *PaginationUrls
+	PokemonUrl                     string
+}
+
+var urlConfig = &PokeApiUrls{
+	BaseUrl:             "https://pokeapi.co/api/v2/",
+	LocationAreaListUrl: "https://pokeapi.co/api/v2/location-area/",
+	LocationAreaListPaginationUrls: &PaginationUrls{
 		Current:  "https://pokeapi.co/api/v2/location-area/",
 		Next:     nil,
 		Previous: nil,
 	},
-	pokemonUrl: "https://pokeapi.co/api/v2/pokemon/",
+	PokemonUrl: "https://pokeapi.co/api/v2/pokemon/",
 }

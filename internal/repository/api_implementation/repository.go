@@ -10,21 +10,9 @@ import (
 	"github.com/Glazapolzet/go_pokedex/internal/repository"
 )
 
-type paginationUrls struct {
-	Current  string
-	Next     *string
-	Previous *string
-}
-
-func (p *paginationUrls) Update(current string, next *string, prev *string) {
-	p.Current = current
-	p.Next = next
-	p.Previous = prev
-}
-
 type repo struct {
 	apiCache *cache.Cache
-	urls     *pokeApiEndpoints
+	urls     *PokeApiUrls
 }
 
 func NewRepository(cacheTtl time.Duration) *repo {
@@ -37,7 +25,7 @@ func NewRepository(cacheTtl time.Duration) *repo {
 }
 
 func (r *repo) GetNextLocationAreaList() *repository.LocationAreaList {
-	p := r.urls.locationAreaListPaginationUrls
+	p := r.urls.LocationAreaListPaginationUrls
 
 	locationAreaList := r.getLocationAreaList(p.Current)
 
@@ -46,14 +34,14 @@ func (r *repo) GetNextLocationAreaList() *repository.LocationAreaList {
 	}
 
 	if p.Previous == nil && p.Next == nil {
-		p.Update(p.Current, locationAreaList.Next, locationAreaList.Previous)
+		p.Set(p.Current, locationAreaList.Next, locationAreaList.Previous)
 
 		return locationAreaList
 	}
 
 	nextLocationAreaList := r.getLocationAreaList(*locationAreaList.Next)
 
-	p.Update(
+	p.Set(
 		*locationAreaList.Next,
 		nextLocationAreaList.Next,
 		nextLocationAreaList.Previous,
@@ -63,7 +51,7 @@ func (r *repo) GetNextLocationAreaList() *repository.LocationAreaList {
 }
 
 func (r *repo) GetPrevLocationAreaList() *repository.LocationAreaList {
-	p := r.urls.locationAreaListPaginationUrls
+	p := r.urls.LocationAreaListPaginationUrls
 
 	locationAreaList := r.getLocationAreaList(p.Current)
 
@@ -73,7 +61,7 @@ func (r *repo) GetPrevLocationAreaList() *repository.LocationAreaList {
 
 	prevLocationAreaList := r.getLocationAreaList(*locationAreaList.Previous)
 
-	p.Update(
+	p.Set(
 		*locationAreaList.Previous,
 		prevLocationAreaList.Next,
 		prevLocationAreaList.Previous,
@@ -83,11 +71,11 @@ func (r *repo) GetPrevLocationAreaList() *repository.LocationAreaList {
 }
 
 func (r *repo) GetLocationArea(name string) *repository.LocationArea {
-	return r.getLocationArea(r.urls.locationAreaListUrl + name)
+	return r.getLocationArea(r.urls.LocationAreaListUrl + name)
 }
 
 func (r *repo) GetPokemon(name string) *repository.Pokemon {
-	return r.getPokemon(r.urls.pokemonUrl + name)
+	return r.getPokemon(r.urls.PokemonUrl + name)
 }
 
 func (r *repo) getLocationAreaList(url string) *repository.LocationAreaList {

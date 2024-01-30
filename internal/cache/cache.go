@@ -15,6 +15,17 @@ type Cache struct {
 	entries map[string]cacheEntry
 }
 
+func NewCache(interval time.Duration) *Cache {
+	cache := Cache{
+		mu:      sync.Mutex{},
+		entries: make(map[string]cacheEntry),
+	}
+
+	go cache.reapLoop(interval)
+
+	return &cache
+}
+
 func (c *Cache) Add(key string, val []byte) error {
 	c.mu.Lock()
 	defer c.mu.Unlock()
@@ -53,15 +64,4 @@ func (c *Cache) reapLoop(interval time.Duration) {
 	for t := range ticker.C {
 		c.reap(t, interval)
 	}
-}
-
-func NewCache(interval time.Duration) *Cache {
-	cache := Cache{
-		mu:      sync.Mutex{},
-		entries: make(map[string]cacheEntry),
-	}
-
-	go cache.reapLoop(interval)
-
-	return &cache
 }
