@@ -7,7 +7,10 @@ import (
 
 func makeExit() *cliCommand {
 	callback := func(args ...string) error {
-		fmt.Printf("\nBye-bye!\n\n")
+		var formatted string
+
+		formatted += fmt.Sprintf("Bye-bye!\n")
+		fmt.Printf("\n%v\n", formatted)
 
 		os.Exit(0)
 

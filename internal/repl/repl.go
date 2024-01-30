@@ -5,16 +5,11 @@ import (
 	"fmt"
 	"os"
 	"strings"
-	"time"
 
 	"github.com/Glazapolzet/go_pokedex/internal/commands"
-	apiimplementation "github.com/Glazapolzet/go_pokedex/internal/repository/api_implementation"
 )
 
-func Run() {
-	repository := apiimplementation.NewRepository(time.Minute * 5)
-	cliCommands := commands.NewCliCommands(repository)
-
+func Run(cliCommands *commands.CliCommands) {
 	for {
 		fmt.Print("Pokedex > ")
 

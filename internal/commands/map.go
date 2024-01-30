@@ -10,13 +10,14 @@ func makeMapf(r repository.Repository) *cliCommand {
 	callback := func(args ...string) error {
 		locationAreaList := r.GetNextLocationAreaList()
 
+		var formatted string
+
 		if locationAreaList == nil {
-			fmt.Printf("\nNo more pages left..\n\n")
+			formatted += fmt.Sprintf("No more pages left...\n")
+			fmt.Printf("\n%v\n", formatted)
 
 			return nil
 		}
-
-		var formatted string
 
 		for _, locationArea := range locationAreaList.Results {
 			formatted += fmt.Sprintf("%v\n", locationArea.Name)
@@ -38,13 +39,14 @@ func makeMapb(r repository.Repository) *cliCommand {
 	callback := func(args ...string) error {
 		locationAreaList := r.GetPrevLocationAreaList()
 
+		var formatted string
+
 		if locationAreaList == nil {
-			fmt.Printf("\nNo more pages left..\n\n")
+			formatted += fmt.Sprintf("No more pages left...\n")
+			fmt.Printf("\n%v\n", formatted)
 
 			return nil
 		}
-
-		var formatted string
 
 		for _, locationArea := range locationAreaList.Results {
 			formatted += fmt.Sprintf("%v\n", locationArea.Name)

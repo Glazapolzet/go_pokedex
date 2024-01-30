@@ -22,6 +22,11 @@ func (p *paginationUrls) Update(current string, next *string, prev *string) {
 	p.Previous = prev
 }
 
+type repo struct {
+	apiCache *cache.Cache
+	urls     *pokeApiEndpoints
+}
+
 func NewRepository(cacheTtl time.Duration) *repo {
 	r := &repo{
 		apiCache: cache.NewCache(cacheTtl),
@@ -29,11 +34,6 @@ func NewRepository(cacheTtl time.Duration) *repo {
 	}
 
 	return r
-}
-
-type repo struct {
-	apiCache *cache.Cache
-	urls     *pokeApiEndpoints
 }
 
 func (r *repo) GetNextLocationAreaList() *repository.LocationAreaList {
@@ -86,6 +86,10 @@ func (r *repo) GetLocationArea(name string) *repository.LocationArea {
 	return r.getLocationArea(r.urls.locationAreaListUrl + name)
 }
 
+func (r *repo) GetPokemon(name string) *repository.Pokemon {
+	return r.getPokemon(r.urls.pokemonUrl + name)
+}
+
 func (r *repo) getLocationAreaList(url string) *repository.LocationAreaList {
 	data := r.getFromApi(url)
 
@@ -110,6 +114,19 @@ func (r *repo) getLocationArea(url string) *repository.LocationArea {
 	}
 
 	return locationArea
+}
+
+func (r *repo) getPokemon(url string) *repository.Pokemon {
+	data := r.getFromApi(url)
+
+	pokemon := repository.NewPokemon()
+
+	err := json.Unmarshal(data, pokemon)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return pokemon
 }
 
 func (r *repo) getFromApi(url string) []byte {

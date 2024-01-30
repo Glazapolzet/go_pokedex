@@ -16,19 +16,23 @@ func makeHelp(commandList map[string]*cliCommand) *cliCommand {
 	callback := func(args ...string) error {
 		var helpText *string
 
+		var formatted string
+
 		if len(args) == 0 {
 			helpText = getHelpText(commandList)
 		} else {
 			helpText = getHelpTextOnCommand(commandList, args[0])
 
 			if helpText == nil {
-				fmt.Printf("\nNo such command\n\n")
+				formatted += fmt.Sprintf("No such command\n")
+				fmt.Printf("\n%v\n", formatted)
 
 				return nil
 			}
 		}
 
-		fmt.Printf("\n%v\n", *helpText)
+		formatted += fmt.Sprintf(*helpText)
+		fmt.Printf("\n%v\n", formatted)
 
 		return nil
 	}

@@ -3,6 +3,7 @@ package commands
 import (
 	"fmt"
 
+	"github.com/Glazapolzet/go_pokedex/internal/pokedex"
 	"github.com/Glazapolzet/go_pokedex/internal/repository"
 )
 
@@ -12,9 +13,14 @@ type cliCommand struct {
 	Callback    func(args ...string) error
 }
 
-func NewCliCommands(repo repository.Repository) *CliCommands {
+type CliCommands struct {
+	commandList map[string]*cliCommand
+	repository  repository.Repository
+}
+
+func NewCliCommands(pokedex pokedex.Pokedex, repo repository.Repository) *CliCommands {
 	c := &CliCommands{
-		commandList: map[string]*cliCommand{},
+		commandList: make(map[string]*cliCommand),
 		repository:  repo,
 	}
 
@@ -33,12 +39,10 @@ func NewCliCommands(repo repository.Repository) *CliCommands {
 	help := makeHelp(c.GetCommandList())
 	c.SetCommand(help.Name, help)
 
-	return c
-}
+	catch := makeCatch(pokedex, repo)
+	c.SetCommand(catch.Name, catch)
 
-type CliCommands struct {
-	commandList map[string]*cliCommand
-	repository  repository.Repository
+	return c
 }
 
 func (c *CliCommands) GetCommandList() map[string]*cliCommand {
@@ -48,8 +52,11 @@ func (c *CliCommands) GetCommandList() map[string]*cliCommand {
 func (c *CliCommands) GetCommand(key string) *cliCommand {
 	command, ok := c.commandList[key]
 
+	var formatted string
+
 	if !ok {
-		fmt.Printf("\nNo such command\n\n")
+		formatted += fmt.Sprintf("No such command\n")
+		fmt.Printf("\n%v\n", formatted)
 
 		return nil
 	}

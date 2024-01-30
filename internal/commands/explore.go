@@ -8,11 +8,12 @@ import (
 
 func makeExplore(r repository.Repository) *cliCommand {
 	callback := func(args ...string) error {
-		locationArea := r.GetLocationArea(args[0])
-
-		var formatted string
+		name := args[0]
+		locationArea := r.GetLocationArea(name)
 
 		fmt.Printf("\nFound pokemon:\n")
+
+		var formatted string
 
 		for _, pokemonDetails := range locationArea.PokemonEncounters {
 			formatted += fmt.Sprintf("-%v\n", pokemonDetails.Pokemon.Name)
