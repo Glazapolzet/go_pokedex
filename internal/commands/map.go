@@ -8,7 +8,7 @@ import (
 
 func makeMapf(r repository.Repository) *cliCommand {
 	callback := func(args ...string) error {
-		locationAreaList := r.GetNextLocationAreaList()
+		locationAreaList := r.GetLocationAreaListNext()
 
 		var formatted string
 
@@ -37,7 +37,7 @@ func makeMapf(r repository.Repository) *cliCommand {
 
 func makeMapb(r repository.Repository) *cliCommand {
 	callback := func(args ...string) error {
-		locationAreaList := r.GetPrevLocationAreaList()
+		locationAreaList := r.GetLocationAreaListPrevious()
 
 		var formatted string
 

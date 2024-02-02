@@ -1,22 +1,24 @@
 package implementation
 
-import "github.com/Glazapolzet/go_pokedex/internal/repository"
+import (
+	"github.com/Glazapolzet/go_pokedex/internal/entity"
+)
 
 type pokedex struct {
-	pokemonList map[string]*repository.Pokemon
+	pokemonList map[string]*entity.Pokemon
 }
 
 func NewPokedex() *pokedex {
 	return &pokedex{
-		pokemonList: make(map[string]*repository.Pokemon),
+		pokemonList: make(map[string]*entity.Pokemon),
 	}
 }
 
-func (p *pokedex) GetAll() map[string]*repository.Pokemon {
+func (p *pokedex) GetAll() map[string]*entity.Pokemon {
 	return p.pokemonList
 }
 
-func (p *pokedex) Get(name string) *repository.Pokemon {
+func (p *pokedex) Get(name string) *entity.Pokemon {
 	pokemon, ok := p.pokemonList[name]
 
 	if !ok {
@@ -26,6 +28,6 @@ func (p *pokedex) Get(name string) *repository.Pokemon {
 	return pokemon
 }
 
-func (p *pokedex) Add(pokemon *repository.Pokemon) {
+func (p *pokedex) Add(pokemon *entity.Pokemon) {
 	p.pokemonList[pokemon.Name] = pokemon
 }

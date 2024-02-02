@@ -9,27 +9,39 @@ import (
 	"github.com/Glazapolzet/go_pokedex/internal/commands"
 )
 
-func Run(cliCommands *commands.CliCommands) {
+type repl struct {
+	commands *commands.CliCommands
+}
+
+func NewRepl(commands *commands.CliCommands) *repl {
+	return &repl{
+		commands: commands,
+	}
+}
+
+func (r *repl) Run() {
 	for {
 		fmt.Print("Pokedex > ")
 
-		tokens := makeTokens(getUserPrompt())
+		tokens := r.makeTokens(r.getUserPrompt())
+		keyword := tokens[0]
+		args := tokens[1:]
 
-		command := cliCommands.Get(tokens[0])
+		command := r.commands.Get(keyword)
 
 		if command == nil {
 			continue
 		}
 
-		command.Callback(tokens[1:]...)
+		command.Callback(args...)
 	}
 }
 
-func makeTokens(prompt string) []string {
+func (r *repl) makeTokens(prompt string) []string {
 	return strings.Split(strings.ToLower(prompt), " ")
 }
 
-func getUserPrompt() string {
+func (r *repl) getUserPrompt() string {
 	scanner := bufio.NewScanner(os.Stdin)
 
 	scanner.Scan()

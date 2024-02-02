@@ -1,9 +1,11 @@
 package pokedex
 
-import "github.com/Glazapolzet/go_pokedex/internal/repository"
+import (
+	"github.com/Glazapolzet/go_pokedex/internal/entity"
+)
 
 type Pokedex interface {
-	Add(*repository.Pokemon)
-	GetAll() map[string]*repository.Pokemon
-	Get(name string) *repository.Pokemon
+	Add(*entity.Pokemon)
+	GetAll() map[string]*entity.Pokemon
+	Get(name string) *entity.Pokemon
 }

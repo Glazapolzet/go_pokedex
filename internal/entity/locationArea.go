@@ -1,4 +1,4 @@
-package repository
+package entity
 
 type LocationArea struct {
 	EncounterMethodRates []struct {

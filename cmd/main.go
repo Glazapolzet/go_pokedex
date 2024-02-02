@@ -9,11 +9,17 @@ import (
 	apiimplementation "github.com/Glazapolzet/go_pokedex/internal/repository/api_implementation"
 )
 
+var urlConfig = &apiimplementation.PokeApiUrls{
+	Base:         "https://pokeapi.co/api/v2/",
+	LocationArea: "https://pokeapi.co/api/v2/location-area/",
+	Pokemon:      "https://pokeapi.co/api/v2/pokemon/",
+}
+
 func main() {
-	repository := apiimplementation.NewRepository(time.Minute * 5)
 	pokedex := implementation.NewPokedex()
+	repository := apiimplementation.NewRepo(urlConfig, time.Minute*5)
+	commands := commands.NewCliCommands(pokedex, repository)
+	repl := repl.NewRepl(commands)
 
-	cliCommands := commands.NewCliCommands(pokedex, repository)
-
-	repl.Run(cliCommands)
+	repl.Run()
 }

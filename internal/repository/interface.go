@@ -1,8 +1,13 @@
 package repository
 
+import (
+	locationAreaRepoI "github.com/Glazapolzet/go_pokedex/internal/repository/locationArea"
+	locationAreaListRepoI "github.com/Glazapolzet/go_pokedex/internal/repository/locationAreaList"
+	pokemonRepoI "github.com/Glazapolzet/go_pokedex/internal/repository/pokemon"
+)
+
 type Repository interface {
-	GetNextLocationAreaList() *LocationAreaList
-	GetPrevLocationAreaList() *LocationAreaList
-	GetLocationArea(name string) *LocationArea
-	GetPokemon(name string) *Pokemon
+	locationAreaListRepoI.Repository
+	locationAreaRepoI.Repository
+	pokemonRepoI.Repository
 }
