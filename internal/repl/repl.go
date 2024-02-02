@@ -15,7 +15,7 @@ func Run(cliCommands *commands.CliCommands) {
 
 		tokens := makeTokens(getUserPrompt())
 
-		command := cliCommands.GetCommand(tokens[0])
+		command := cliCommands.Get(tokens[0])
 
 		if command == nil {
 			continue
@@ -26,7 +26,7 @@ func Run(cliCommands *commands.CliCommands) {
 }
 
 func makeTokens(prompt string) []string {
-	return strings.Split(prompt, " ")
+	return strings.Split(strings.ToLower(prompt), " ")
 }
 
 func getUserPrompt() string {

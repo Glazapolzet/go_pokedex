@@ -19,9 +19,9 @@ func makeHelp(commandList map[string]*cliCommand) *cliCommand {
 		var formatted string
 
 		if len(args) == 0 {
-			helpText = getHelpText(commandList)
+			helpText = formatHelpText(commandList)
 		} else {
-			helpText = getHelpTextOnCommand(commandList, args[0])
+			helpText = formatHelpTextOnCommand(commandList, args[0])
 
 			if helpText == nil {
 				formatted += fmt.Sprintf("No such command\n")
@@ -42,7 +42,7 @@ func makeHelp(commandList map[string]*cliCommand) *cliCommand {
 	return helpCommand
 }
 
-func getHelpText(commandList map[string]*cliCommand) *string {
+func formatHelpText(commandList map[string]*cliCommand) *string {
 	var formatted string
 
 	formatted += fmt.Sprintf("Welcome to the Pokedex!\nUsage:\n\n")
@@ -54,7 +54,7 @@ func getHelpText(commandList map[string]*cliCommand) *string {
 	return &formatted
 }
 
-func getHelpTextOnCommand(commandList map[string]*cliCommand, token string) *string {
+func formatHelpTextOnCommand(commandList map[string]*cliCommand, token string) *string {
 	var formatted string
 
 	command, ok := commandList[token]

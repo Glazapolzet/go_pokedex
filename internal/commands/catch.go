@@ -12,12 +12,12 @@ func makeCatch(p pokedex.Pokedex, r repository.Repository) *cliCommand {
 	callback := func(args ...string) error {
 		name := args[0]
 
-		fmt.Printf("\nThrowing a Pokeball at %v...\n", name)
+		var formatted string
+
+		formatted += fmt.Sprintf("Throwing a Pokeball at %v...\n", name)
 
 		pokemon := r.GetPokemon(name)
 		isCatchSuccess := checkIfSuccess(getRandomNumber(pokemon.BaseExperience))
-
-		var formatted string
 
 		if !isCatchSuccess {
 			formatted += fmt.Sprintf("%v escaped!\n", name)
@@ -28,7 +28,7 @@ func makeCatch(p pokedex.Pokedex, r repository.Repository) *cliCommand {
 
 		p.Add(pokemon)
 
-		formatted += fmt.Sprintf("%v was caught!\n", name)
+		formatted += fmt.Sprintf("%v was caught!\nYou may now inspect it with the inspect command.\n", name)
 		fmt.Printf("\n%v\n", formatted)
 
 		return nil

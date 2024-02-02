@@ -11,9 +11,9 @@ func makeExplore(r repository.Repository) *cliCommand {
 		name := args[0]
 		locationArea := r.GetLocationArea(name)
 
-		fmt.Printf("\nFound pokemon:\n")
-
 		var formatted string
+
+		formatted += fmt.Sprintf("Found pokemon:\n")
 
 		for _, pokemonDetails := range locationArea.PokemonEncounters {
 			formatted += fmt.Sprintf("-%v\n", pokemonDetails.Pokemon.Name)

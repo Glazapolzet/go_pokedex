@@ -25,31 +25,37 @@ func NewCliCommands(pokedex pokedex.Pokedex, repo repository.Repository) *CliCom
 	}
 
 	exit := makeExit()
-	c.SetCommand(exit.Name, exit)
+	c.Add(exit.Name, exit)
 
 	explore := makeExplore(repo)
-	c.SetCommand(explore.Name, explore)
+	c.Add(explore.Name, explore)
 
 	mapf := makeMapf(repo)
-	c.SetCommand(mapf.Name, mapf)
+	c.Add(mapf.Name, mapf)
 
 	mapb := makeMapb(repo)
-	c.SetCommand(mapb.Name, mapb)
+	c.Add(mapb.Name, mapb)
 
-	help := makeHelp(c.GetCommandList())
-	c.SetCommand(help.Name, help)
+	help := makeHelp(c.GetAll())
+	c.Add(help.Name, help)
 
 	catch := makeCatch(pokedex, repo)
-	c.SetCommand(catch.Name, catch)
+	c.Add(catch.Name, catch)
+
+	inspect := makeInspect(pokedex)
+	c.Add(inspect.Name, inspect)
+
+	pokedexCli := makePokedex(pokedex)
+	c.Add(pokedexCli.Name, pokedexCli)
 
 	return c
 }
 
-func (c *CliCommands) GetCommandList() map[string]*cliCommand {
+func (c *CliCommands) GetAll() map[string]*cliCommand {
 	return c.commandList
 }
 
-func (c *CliCommands) GetCommand(key string) *cliCommand {
+func (c *CliCommands) Get(key string) *cliCommand {
 	command, ok := c.commandList[key]
 
 	var formatted string
@@ -64,6 +70,6 @@ func (c *CliCommands) GetCommand(key string) *cliCommand {
 	return command
 }
 
-func (c *CliCommands) SetCommand(key string, newCommand *cliCommand) {
+func (c *CliCommands) Add(key string, newCommand *cliCommand) {
 	c.commandList[key] = newCommand
 }

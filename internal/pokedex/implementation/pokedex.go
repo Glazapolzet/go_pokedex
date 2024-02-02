@@ -12,6 +12,20 @@ func NewPokedex() *pokedex {
 	}
 }
 
+func (p *pokedex) GetAll() map[string]*repository.Pokemon {
+	return p.pokemonList
+}
+
+func (p *pokedex) Get(name string) *repository.Pokemon {
+	pokemon, ok := p.pokemonList[name]
+
+	if !ok {
+		return nil
+	}
+
+	return pokemon
+}
+
 func (p *pokedex) Add(pokemon *repository.Pokemon) {
 	p.pokemonList[pokemon.Name] = pokemon
 }
