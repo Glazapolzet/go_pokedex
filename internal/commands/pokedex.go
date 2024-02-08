@@ -3,7 +3,7 @@ package commands
 import (
 	"fmt"
 
-	"github.com/Glazapolzet/go_pokedex/internal/pokedex"
+	"github.com/Glazapolzet/go_pokedex/internal/utils/pokedex"
 )
 
 func makePokedex(p pokedex.Pokedex) *cliCommand {

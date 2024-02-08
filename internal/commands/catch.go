@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"math/rand"
 
-	"github.com/Glazapolzet/go_pokedex/internal/pokedex"
 	"github.com/Glazapolzet/go_pokedex/internal/repository"
+	"github.com/Glazapolzet/go_pokedex/internal/utils/pokedex"
 )
 
 func makeCatch(p pokedex.Pokedex, r repository.Repository) *cliCommand {

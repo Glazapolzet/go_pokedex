@@ -5,7 +5,7 @@ import (
 )
 
 type Pokedex interface {
-	Add(*entity.Pokemon)
+	Add(pokemon *entity.Pokemon)
 	GetAll() map[string]*entity.Pokemon
 	Get(name string) *entity.Pokemon
 }

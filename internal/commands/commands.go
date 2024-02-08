@@ -3,8 +3,9 @@ package commands
 import (
 	"fmt"
 
-	"github.com/Glazapolzet/go_pokedex/internal/pokedex"
 	"github.com/Glazapolzet/go_pokedex/internal/repository"
+	"github.com/Glazapolzet/go_pokedex/internal/utils/pokedex"
+	"github.com/Glazapolzet/go_pokedex/internal/utils/pokeprinter"
 )
 
 type cliCommand struct {
@@ -15,40 +16,69 @@ type cliCommand struct {
 
 type CliCommands struct {
 	commandList map[string]*cliCommand
-	repository  repository.Repository
+	Repository  repository.Repository
+	Pokedex     pokedex.Pokedex
+	Pokeprinter pokeprinter.Pokeprinter
 }
 
-func NewCliCommands(pokedex pokedex.Pokedex, repo repository.Repository) *CliCommands {
+func NewCliCommands(repo repository.Repository, pokedex pokedex.Pokedex, pokeprinter pokeprinter.Pokeprinter) *CliCommands {
 	c := &CliCommands{
 		commandList: make(map[string]*cliCommand),
-		repository:  repo,
+		Repository:  repo,
+		Pokedex:     pokedex,
+		Pokeprinter: pokeprinter,
 	}
 
-	exit := makeExit()
-	c.Add(exit.Name, exit)
-
-	explore := makeExplore(repo)
-	c.Add(explore.Name, explore)
-
-	mapf := makeMapf(repo)
-	c.Add(mapf.Name, mapf)
-
-	mapb := makeMapb(repo)
-	c.Add(mapb.Name, mapb)
-
-	help := makeHelp(c.GetAll())
-	c.Add(help.Name, help)
-
-	catch := makeCatch(pokedex, repo)
-	c.Add(catch.Name, catch)
-
-	inspect := makeInspect(pokedex)
-	c.Add(inspect.Name, inspect)
-
-	pokedexCli := makePokedex(pokedex)
-	c.Add(pokedexCli.Name, pokedexCli)
+	c.AddExitCmd()
+	c.AddCatchCmd()
+	c.AddExploreCmd()
+	c.AddHelpCmd()
+	c.AddInspectCmd()
+	c.AddMapbCmd()
+	c.AddMapfCmd()
+	c.AddPokedexCmd()
 
 	return c
+}
+
+func (c *CliCommands) AddExitCmd() {
+	exit := makeExit()
+	c.Add(exit.Name, exit)
+}
+
+func (c *CliCommands) AddExploreCmd() {
+	explore := makeExplore(c.Repository)
+	c.Add(explore.Name, explore)
+}
+
+func (c *CliCommands) AddMapfCmd() {
+	mapf := makeMapf(c.Repository)
+	c.Add(mapf.Name, mapf)
+}
+
+func (c *CliCommands) AddMapbCmd() {
+	mapb := makeMapb(c.Repository)
+	c.Add(mapb.Name, mapb)
+}
+
+func (c *CliCommands) AddHelpCmd() {
+	help := makeHelp(c.GetAll())
+	c.Add(help.Name, help)
+}
+
+func (c *CliCommands) AddCatchCmd() {
+	catch := makeCatch(c.Pokedex, c.Repository)
+	c.Add(catch.Name, catch)
+}
+
+func (c *CliCommands) AddInspectCmd() {
+	inspect := makeInspect(c.Pokedex, c.Pokeprinter)
+	c.Add(inspect.Name, inspect)
+}
+
+func (c *CliCommands) AddPokedexCmd() {
+	pokedexCli := makePokedex(c.Pokedex)
+	c.Add(pokedexCli.Name, pokedexCli)
 }
 
 func (c *CliCommands) GetAll() map[string]*cliCommand {
